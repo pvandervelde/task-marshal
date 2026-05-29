@@ -31,7 +31,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 
 ### T2: Path Traversal via Config `path` Fields
 
-**Threat:** A malicious `.llm/task-marshal.toml` could set `sources.local.path = "../../etc/passwd"` to cause task-marshal to read or write arbitrary files.
+**Threat:** A malicious `task-marshal.toml` could set `sources.local.path = "../../etc/passwd"` to cause task-marshal to read or write arbitrary files.
 
 **Mitigation:**
 
@@ -45,14 +45,14 @@ task-marshal is a local development tool. It runs with the same privileges as th
 
 ### T3: Credential Exposure via Config
 
-**Threat:** Developers may accidentally add credentials (GitHub tokens, API keys) to `.llm/task-marshal.toml`, which may be committed to version control.
+**Threat:** Developers may accidentally add credentials (GitHub tokens, API keys) to `task-marshal.toml`, which may be committed to version control.
 
 **Mitigation:**
 
 - The config schema contains **no credential fields**
 - Credentials for GitHub are managed by `gh` CLI; credentials for BEADS are managed by `bd` CLI
 - Documentation and config schema comments explicitly state no credentials belong here
-- A `.gitignore` entry for `.llm/task-marshal.toml` is **not** recommended (config is intended to be committed); the absence of credential fields removes the risk
+- A `.gitignore` entry for `task-marshal.toml` is **not** recommended by default (config is intended to be committed); the absence of credential fields removes the risk. Users may gitignore it for personal-only configurations.
 
 ---
 

@@ -283,15 +283,15 @@ Testable assertions for every behavioral requirement. Each assertion follows Giv
 
 ### A30 — Config is discovered by walking up from CWD
 
-**Given:** Working directory is `/project/src/module`; config exists at `/project/.llm/task-marshal.toml`
+**Given:** Working directory is `/project/src/module`; config exists at `/project/task-marshal.toml`
 **When:** `task-marshal next` is invoked from `/project/src/module`
-**Then:** The config at `/project/.llm/task-marshal.toml` is used
+**Then:** The config at `/project/task-marshal.toml` is used
 
 ---
 
 ### A31 — No config file is a hard error
 
-**Given:** No `.llm/task-marshal.toml` found anywhere in the directory tree
+**Given:** No `task-marshal.toml` found anywhere in the directory tree
 **When:** Any `task-marshal` command is invoked
 **Then:** An error message is written to stderr
 **And:** Process exits with code 2

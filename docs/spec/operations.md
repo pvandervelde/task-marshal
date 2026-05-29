@@ -17,26 +17,28 @@
 task-marshal locates its config file by walking up the directory tree:
 
 1. Start at the current working directory
-2. Check for `.llm/task-marshal.toml` in the current directory
+2. Check for `task-marshal.toml` in the current directory
 3. If not found, move to the parent directory
 4. Repeat until the file is found or the filesystem root is reached
 5. If the filesystem root is reached without finding the file, fail with `ConfigError`
 
 **Resolution of relative paths in config:**
-All relative paths specified in the config file (e.g., `sources.local.path`) are resolved relative to the **directory containing the config file**, not the CWD. This ensures consistent behaviour regardless of which subdirectory the user invokes task-marshal from.
+All relative paths specified in the config file (e.g., `sources.local.path`) are resolved relative to the **directory containing the config file** (i.e., the repo root), not the CWD. This ensures consistent behaviour regardless of which subdirectory the user invokes task-marshal from.
 
 Example:
 
 ```
-/project/.llm/task-marshal.toml  → config file
-/project/.llm/tasks.md           → resolved from path = ".llm/tasks.md" relative to /project/
+/project/task-marshal.toml  → config file
+/project/.llm/tasks.md      → resolved from path = ".llm/tasks.md" relative to /project/
 ```
 
 ---
 
 ## Config File
 
-Default location: `.llm/task-marshal.toml` (in the project root, discovered by walk-up)
+Default location: `task-marshal.toml` (in the project root, discovered by walk-up)
+
+The config file is intended to be committed to version control. Users who prefer to keep their configuration local (e.g., personal source overrides) can add `task-marshal.toml` to `.gitignore`.
 
 ```toml
 [sources]

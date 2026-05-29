@@ -39,7 +39,7 @@ CRC-style responsibility cards for every major component. Each card defines what
 
 **Knows:**
 
-- The config file name (`.llm/task-marshal.toml`)
+- The config file name (`task-marshal.toml`)
 - The walk-up discovery algorithm (start at CWD, ascend to root)
 - The TOML schema for all source types
 

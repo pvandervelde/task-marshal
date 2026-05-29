@@ -7,7 +7,7 @@
 
 ## Context
 
-task-marshal needs to locate its configuration file (`.llm/task-marshal.toml`) when invoked from any directory within a project. Developers and agents may invoke it from:
+task-marshal needs to locate its configuration file (`task-marshal.toml`) when invoked from any directory within a project. Developers and agents may invoke it from:
 
 - The project root
 - Any subdirectory (e.g., `src/`, `src/components/auth/`)
@@ -18,7 +18,9 @@ The config must be found consistently without requiring the user to specify an e
 
 ## Decision
 
-task-marshal discovers its config file by **walking up from the current working directory**, checking for `.llm/task-marshal.toml` at each level, stopping at the first match. If the filesystem root is reached without finding the file, `ConfigError` is returned.
+task-marshal discovers its config file by **walking up from the current working directory**, checking for `task-marshal.toml` at each level, stopping at the first match. If the filesystem root is reached without finding the file, `ConfigError` is returned.
+
+The config file lives at the **repo root**. Users may add it to `.gitignore` if they prefer not to commit it; the intent is that it is committed.
 
 Relative paths inside the config file are resolved relative to the **config file's directory**, not the CWD.
 
@@ -39,7 +41,7 @@ No `--config` flag or environment variable override is provided in v1.
 
 | Alternative | Why rejected |
 |---|---|
-| Fixed path from CWD (`.llm/task-marshal.toml` relative to CWD only) | Breaks if invoked from a subdirectory; requires users to always run from project root |
+| Fixed path from CWD (`task-marshal.toml` relative to CWD only) | Breaks if invoked from a subdirectory; requires users to always run from project root |
 | Fixed absolute path or `$HOME` config | Not project-specific; cannot support multiple projects |
 | `--config <path>` flag | Adds CLI complexity; not needed for typical single-project use |
 | `TASK_MARSHAL_CONFIG` env var | Requires users to set env vars; verbose for daily use |

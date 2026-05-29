@@ -120,9 +120,9 @@
 
 ### EC-15: Config file found in ancestor directory
 
-**Scenario:** CWD is `/project/src/components`; config is at `/project/.llm/task-marshal.toml`.
-**Expected:** Config is found and used correctly. All relative paths in config (e.g., `path = ".llm/tasks.md"`) are resolved relative to the config file's directory (`/project/.llm/`).
-**Critical:** Paths in config are relative to the config file, not to CWD.
+**Scenario:** CWD is `/project/src/components`; config is at `/project/task-marshal.toml`.
+**Expected:** Config is found and used correctly. All relative paths in config (e.g., `path = ".llm/tasks.md"`) are resolved relative to the config file's directory (`/project/`).
+**Critical:** Paths in config are relative to the config file's directory (the repo root), not to CWD.
 
 ---
 

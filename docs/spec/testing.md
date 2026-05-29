@@ -59,7 +59,7 @@ Each adapter is tested in isolation against a controlled environment.
 
 Target: the compiled `task-marshal` binary invoked end-to-end
 
-- Use a temp directory with a fixture `.llm/task-marshal.toml` and `.llm/tasks.md`
+- Use a temp directory with a fixture `task-marshal.toml` and `.llm/tasks.md`
 - Use mock `bd` and `gh` binaries (shell scripts or compiled test stubs) placed in a temporary PATH
 
 | Scenario | Expected outcome |

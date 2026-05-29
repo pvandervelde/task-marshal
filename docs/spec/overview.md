@@ -19,7 +19,7 @@ graph TD
 
     TM["task-marshal\n(CLI binary)"]
 
-    TM --> C[".llm/task-marshal.toml\n(config)"]
+    TM --> C["task-marshal.toml\n(config, repo root)"]
     TM -->|"read / in-place write"| D[".llm/tasks.md\n(local file)"]
     TM -->|"bd ready --json\nbd show id --json\nbd close id"| E["bd binary\n(BEADS CLI)"]
     E --> F[".beads/ Dolt DB"]
@@ -123,4 +123,4 @@ See [vocabulary.md](vocabulary.md) for full definitions.
 | `Priority` | Integer — lower number = higher priority (P0 most urgent) |
 | `Role` | Agent role label for task assignment (e.g., `coder`, `tester`, `architect`) |
 | `SelectionFilter` | Optional role and/or source restriction for `next` and `list` |
-| `Config` | Parsed TOML configuration loaded from `.llm/task-marshal.toml` |
+| `Config` | Parsed TOML configuration loaded from `task-marshal.toml` (repo root) |

@@ -131,7 +131,7 @@ The composite value used to establish deterministic ordering among candidate tas
 
 The complete parsed configuration for task-marshal.
 
-- **Source:** `.llm/task-marshal.toml`, discovered by walking up from the current working directory
+- **Source:** `task-marshal.toml` at the repo root, discovered by walking up from the current working directory
 - **Contains:** SourcesConfig
 
 ### SourcesConfig
@@ -195,7 +195,7 @@ The source adapter failed to propagate a `done` state change to the source.
 The configuration file could not be found, read, or parsed.
 
 - **Behaviour:** task-marshal prints an error to stderr, exits with code 2
-- **Note:** A missing config file (no `.llm/task-marshal.toml` found in walk-up) is a `ConfigError`
+- **Note:** A missing config file (no `task-marshal.toml` found in walk-up) is a `ConfigError`
 
 ---
 
@@ -203,7 +203,7 @@ The configuration file could not be found, read, or parsed.
 
 ### Config Discovery
 
-The process of locating `.llm/task-marshal.toml` by starting at the current working directory and walking up to the filesystem root. The first file found wins.
+The process of locating `task-marshal.toml` by starting at the current working directory and walking up to the filesystem root. The first file found wins.
 
 ### Source Priority Order
 

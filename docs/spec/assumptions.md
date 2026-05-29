@@ -119,6 +119,8 @@ This is documented as a business rule in [vocabulary.md](vocabulary.md) and test
 
 **Stated in requirements:** "Default location: `.llm/task-marshal.toml`, resolved from the working directory upward"
 
+**Updated decision:** The config file is placed at the **repo root** as `task-marshal.toml` (not inside `.llm/`). This is simpler to discover and type. Users can add it to `.gitignore` if they prefer not to commit it.
+
 **Challenged because:**
 The word "default" implies there may be an override mechanism (e.g., `--config` flag or `TASK_MARSHAL_CONFIG` env var). The requirements don't define one.
 
