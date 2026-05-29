@@ -62,7 +62,7 @@ If `gh` is not in PATH, not authenticated, or the network is unavailable, `Githu
 
 - Runtime dependency on `gh` binary in PATH; graceful degradation (skip source) if absent
 - Cannot distinguish "not authenticated" from "network unavailable" — both surface as `SourceUnavailable`
-- If `gh` hangs (e.g., DNS timeout with no connection refused), task-marshal also hangs (v1 does not implement subprocess timeouts)
+- If `gh` hangs (e.g., DNS timeout with no connection refused), task-marshal also hangs (v1 does not implement subprocess timeouts). **v2 extension point:** timeout can be added by spawning via `Command::spawn()` (non-blocking), then racing `child.wait()` against a timer in a separate thread. The `CommandRunner` trait abstraction (adopted for testing) is the natural injection point for this.
 - GitHub Issues have no dependency model; all issues are treated as unblocked (v1 limitation)
 
 ---

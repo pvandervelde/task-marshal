@@ -98,7 +98,9 @@ Using a property-based testing crate (e.g., `proptest`):
 
 An abstraction over `std::process::Command` execution, injected into `BeadsSource` and `GithubSource` during tests. In production, calls the real binary; in tests, returns a configured `(stdout, stderr, exit_code)` triple.
 
-This requires the subprocess execution to be abstract enough for injection. The interface designer should define a `CommandRunner` trait (or similar) that `BeadsSource` and `GithubSource` depend on.
+**Approach: trait injection.** The interface designer should define a `CommandRunner` trait with a single method (e.g., `run(program, args, env_vars) -> Result<CommandOutput, IoError>`) that `BeadsSource` and `GithubSource` depend on. The production implementation calls `std::process::Command`; the test implementation returns a scripted `(stdout, stderr, exit_code)` response without launching a process. This is not over-abstraction as cautioned in `constraints.md` — subprocess execution is not a one-time operation and this seam is mandatory for deterministic unit testing of subprocess-heavy components.
+
+The alternative (overriding `PATH` to point to fake binaries) is reserved for CLI acceptance tests only, where the goal is to test the compiled binary end-to-end.
 
 ### Test Fixture Task File
 

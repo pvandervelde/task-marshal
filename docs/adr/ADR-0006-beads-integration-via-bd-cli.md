@@ -20,6 +20,8 @@ The user requirements (§6.2) reference "the BEADS local database" and "the BEAD
 - `bd close <id>` marks a task done; `bd close <id> --comment "..."` adds a completion note
 - BEADS manages its own database discovery via git root or `BEADS_DIR` environment variable
 
+**Version note:** The `bd` commands in this ADR were documented against BEADS v1.0.4. Before implementation, verify the `--json` flag and `bd close` syntax with `bd ready --help` and `bd close --help` for the installed version.
+
 ---
 
 ## Decision
@@ -72,7 +74,7 @@ If `bd` is not in PATH or the BEADS database cannot be opened, `BeadsSource` ret
 
 - Runtime dependency on `bd` binary in PATH; graceful degradation if absent
 - JSON parsing of `bd` output is required
-- If `bd` hangs, task-marshal hangs (v1 has no subprocess timeout)
+- If `bd` hangs, task-marshal hangs (v1 has no subprocess timeout). **v2 extension point:** same pattern as ADR-0005 — spawn via `Command::spawn()` and race `child.wait()` against a timer thread.
 - The corrected config schema (`beads_dir` not `db_path`) is a breaking change from the original requirements doc
 
 ---

@@ -32,6 +32,7 @@ The identifier used by the source system for a task.
 - **For `beads`:** BEADS hash ID (e.g., `bd-a1b2`, may include hierarchy like `bd-a1b2.3`)
 - **For `gh`:** GitHub issue number (e.g., `187`)
 - **Constraint:** Unique within a source; must be stable (does not change after task creation)
+- **Sort key normalization:** NativeIds consisting entirely of digits (e.g., GitHub issue numbers) are zero-padded to 9 digits for tiebreaker sort comparison (e.g., `187` → `000000187`), ensuring natural numeric order rather than lexicographic order. The displayed NativeId is always the original value. Non-numeric NativeIds use direct lexicographic comparison.
 
 ### SourceKey
 
@@ -69,6 +70,7 @@ The lifecycle state of a task.
 
 - **Constraint:** Only `unstarted` and `in_progress` tasks are eligible to be returned by `next`
 - **Constraint:** A task is `blocked` if any of its dependencies are not in `done` state
+- **Note:** `in_progress` tasks are not automatically excluded when `next` is called again. An agent resuming a session will receive the same `in_progress` task if it remains the highest-priority eligible task. There is no built-in mechanism to prevent two agents from receiving the same `in_progress` task; call-site coordination is required.
 
 ### Priority
 

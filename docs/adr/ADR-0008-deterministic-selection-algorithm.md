@@ -83,11 +83,12 @@ The `TaskSelector` implements the following deterministic algorithm:
 - Fully deterministic — the same source state always produces the same result
 - Auditable — the algorithm is simple enough to reason about manually
 - Cross-source priority: a P0 in any source beats a P1 in any source
+- `in_progress` tasks remain eligible: calling `next` during an active session returns the highest-priority in-progress task if no higher-priority unstarted task exists, enabling session resumption without explicit state management
 
 **Negative / Tradeoffs:**
 
 - All sources must be queried before any selection can be made (cannot short-circuit at first result)
-- NativeId lexicographic ordering means task naming conventions affect selection order at equal priority — users should be aware
+- NativeId lexicographic ordering produces counterintuitive results for purely numeric strings: `10` sorts before `2`. To address this, task-marshal normalizes NativeIds consisting entirely of digits to 9-digit zero-padded strings for sort key comparison only (the displayed NativeId is unchanged, e.g., GitHub issue `187` compares as `000000187`). For local `TASK-NNN` IDs, the `TASK-` prefix means lexicographic order matches numeric order as long as the digit suffix is consistently zero-padded — the `TASK-NNN` convention (three or more digits) is therefore strongly recommended for local tasks.
 - GitHub dependency tracking is not supported in v1 (all GitHub issues are treated as unblocked regardless of labels or linked issues)
 
 ---

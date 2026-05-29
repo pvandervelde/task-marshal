@@ -79,7 +79,7 @@ Every task returned by `task-marshal` must carry a source-encoded ID. This ID is
 Examples:
 
 - `local:TASK-042`
-- `beads:a3f9c2`
+- `beads:bd-a1b2`
 - `gh:187`
 
 ---

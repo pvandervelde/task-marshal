@@ -148,10 +148,10 @@ Full description of the work to be done.
 **Field rules:**
 
 - `## <NativeId>: <title>` — heading defines the task block boundary and ID
-- `**Priority:**` — `P0`, `P1`, `P2`, etc. (default `P2` if absent)
+- `**Priority:**` — `P0`, `P1`, `P2`, etc. (default `P2` if absent). The parser maps `Pn` to integer `n` (`P0`→0, `P1`→1, etc.). Values above P3 are accepted (`P5`→5). An invalid value (e.g., `P-1`, `Pfoo`, empty) causes the entire task block to be treated as malformed and skipped with a stderr warning.
 - `**Role:**` — optional free-form string
 - `**State:**` — one of `unstarted`, `in_progress`, `blocked`, `done`
-- `**Depends:**` — optional comma-separated list of NativeIds (must be in the same file)
+- `**Depends:**` — optional comma-separated list of NativeIds (must be in the same file); whitespace around commas is ignored (`TASK-040, TASK-041` and `TASK-040,TASK-041` are both valid)
 - `### Description` — required subsection
 - `### Acceptance Criteria` — required subsection
 

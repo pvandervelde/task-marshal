@@ -1,5 +1,7 @@
 # ADR-NNNN: Title
 
+<!-- Next ADR number: ADR-0010 -->
+
 **Date:** YYYY-MM-DD
 **Status:** Proposed | Accepted | Superseded | Deprecated
 **Supersedes:** (ADR number, if applicable)

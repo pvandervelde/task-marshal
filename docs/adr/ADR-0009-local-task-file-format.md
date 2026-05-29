@@ -49,14 +49,18 @@ Full description of the task.
 | `**Priority:**` | No | `P0`, `P1`, `P2`, `P3` | P2 |
 | `**Role:**` | No | Free-form string | (unassigned) |
 | `**State:**` | Yes | `unstarted`, `in_progress`, `blocked`, `done` | — |
-| `**Depends:**` | No | Comma-separated NativeIds | (none) |
+| `**Depends:**` | No | Comma-separated NativeIds; whitespace around commas is ignored | (none) |
 | `### Description` | Yes | Markdown prose | — |
 | `### Acceptance Criteria` | Yes | Markdown list | — |
+
+**Parser notes:**
+- **Priority:** The parser maps `Pn` to integer `n` (`P0`→0, `P1`→1, etc.). Values above P3 are accepted. An invalid value (e.g., `P-1`, `Pfoo`, empty string) causes the entire task block to be treated as malformed and skipped with a stderr warning.
+- **Depends:** Comma-separated NativeIds; whitespace around commas is ignored by the parser.
 
 **NativeId convention:** `TASK-NNN` (three or more digits). The parser accepts any non-whitespace, non-colon string as a NativeId.
 
 **In-place update by `done`:**
-The `**State:**` line is located and its value is replaced with `done`. Written via atomic rename (temp file + rename).
+The `**State:**` line is located and its value is replaced with `done`. Written via atomic rename: a temp file is created **in the same directory as the target task file** (not the system temp directory), then renamed over the original. Same-directory placement is required — cross-filesystem renames fail with `EXDEV`. Use `tempfile::Builder::new().tempfile_in(parent_dir)` and call `.persist(target_path)` to rename atomically.
 
 **Comment annotation by `done --comment`:**
 A `**Completion Note:**` line is inserted immediately after the updated `**State:**` line.

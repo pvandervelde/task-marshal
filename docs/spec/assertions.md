@@ -68,6 +68,15 @@ Testable assertions for every behavioral requirement. Each assertion follows Giv
 
 ---
 
+### A7b — Source filter: no task in specified source exits 1 without fallback
+
+**Given:** Sources configured with tasks in `local` only; `beads` source has no tasks
+**When:** `task-marshal next --source beads` is invoked
+**Then:** Process exits with code 1 with a "no task found" message
+**And:** `local` is not consulted as a fallback
+
+---
+
 ### A8 — Source priority order is respected
 
 **Given:** An eligible task exists in both `local` (P1) and `beads` (P1), with `local` first in priority
@@ -90,6 +99,15 @@ Testable assertions for every behavioral requirement. Each assertion follows Giv
 **When:** `task-marshal next` is invoked
 **Then:** `local:TASK-010` is not returned
 **And:** If another unblocked task exists, that task is returned instead
+
+---
+
+### A10b — `in_progress` tasks are eligible for selection
+
+**Given:** Task `local:TASK-005` has state `in_progress`; no higher-priority unstarted task exists
+**When:** `task-marshal next` is invoked
+**Then:** `local:TASK-005` is returned
+**And:** Process exits with code 0
 
 ---
 
@@ -295,3 +313,13 @@ Testable assertions for every behavioral requirement. Each assertion follows Giv
 **When:** Any `task-marshal` command is invoked
 **Then:** An error message is written to stderr
 **And:** Process exits with code 2
+
+---
+
+### A32 — `list` with no matching tasks exits 0
+
+**Given:** No tasks match the applied filters (or no tasks exist in any source)
+**When:** `task-marshal list` (or `task-marshal list --role X`) is invoked
+**Then:** A "no tasks found" message or empty table is written to stdout
+**And:** Process exits with code 0
+**Note:** Unlike `next`, `list` is informational — an empty result is a successful query, not an error condition.
