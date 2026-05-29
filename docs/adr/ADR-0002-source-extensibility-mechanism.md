@@ -45,11 +45,13 @@ The `SourceRegistry` builds an ordered `Vec<Box<dyn TaskSource>>` from config. A
 ## Consequences
 
 **Positive:**
+
 - True open/closed principle for sources — new sources extend without modifying existing code
 - Source adapters are independently testable via mock implementations of `TaskSource`
 - The `TaskSource` trait is the single, stable contract for all source integration
 
 **Negative / Tradeoffs:**
+
 - Dynamic dispatch (vtable) — negligible for this use case
 - The compiler cannot exhaustively verify that all `SourceKey` variants have a corresponding implementation; this must be enforced by the `SourceRegistry` constructor
 

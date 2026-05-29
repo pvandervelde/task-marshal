@@ -20,6 +20,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** A malicious or malformed `TaskId` or `--comment` value could be used to inject shell commands if it is interpolated into a shell string before being passed to `bd` or `gh`.
 
 **Mitigation:**
+
 - All subprocess calls use `std::process::Command` with arguments supplied as **separate process arguments**, never via `sh -c "..."` or any other shell interpolation
 - User-provided values (`<id>`, `--comment <text>`) are passed directly as argument values, not as part of a command string
 - See [constraints.md](constraints.md) — "Subprocess Safety" rule
@@ -33,6 +34,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** A malicious `.llm/task-marshal.toml` could set `sources.local.path = "../../etc/passwd"` to cause task-marshal to read or write arbitrary files.
 
 **Mitigation:**
+
 - File paths read from config must be resolved to canonical absolute paths using the config file's directory as the base
 - The resolved path must be validated to remain within the project directory (beneath the directory containing the config file, or a configurable root)
 - Symlink following must be handled carefully: use `std::fs::canonicalize()` and check that the result is a descendant of the expected base
@@ -46,6 +48,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** Developers may accidentally add credentials (GitHub tokens, API keys) to `.llm/task-marshal.toml`, which may be committed to version control.
 
 **Mitigation:**
+
 - The config schema contains **no credential fields**
 - Credentials for GitHub are managed by `gh` CLI; credentials for BEADS are managed by `bd` CLI
 - Documentation and config schema comments explicitly state no credentials belong here
@@ -58,6 +61,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** An adversarial or malformed config file could cause excessive memory use or CPU consumption during parsing.
 
 **Mitigation:**
+
 - Use the `toml` crate's standard parser; do not implement a custom TOML parser
 - The config schema is small and bounded; reject configs with unexpected top-level keys
 - No need for explicit size limits beyond what the OS enforces (config files are always small)
@@ -71,6 +75,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** A malicious `bd` or `gh` binary (or one that has been tampered with) could produce output designed to confuse task-marshal's parsing or inject content into the agent's context window.
 
 **Mitigation:**
+
 - task-marshal only writes to stdout what it has parsed and formatted itself
 - Raw subprocess stdout is **never** forwarded directly to task-marshal's stdout
 - Subprocess stderr is either forwarded to task-marshal's stderr (for user diagnostics) or discarded — never forwarded to stdout
@@ -85,6 +90,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** Task descriptions or acceptance criteria may inadvertently contain secrets (tokens, passwords) that are then written to agent context windows.
 
 **Mitigation:**
+
 - task-marshal faithfully reproduces task content; it does not redact or inspect task content
 - This is a content authoring responsibility, not a tool responsibility
 - Documentation should note that task content will be sent to agent context windows
@@ -96,6 +102,7 @@ task-marshal is a local development tool. It runs with the same privileges as th
 **Threat:** Two concurrent `task-marshal done` invocations for the same local file could result in one update being silently overwritten.
 
 **Mitigation:**
+
 - The atomic rename strategy (`write to temp → rename`) reduces the window for corruption to near-zero
 - Last-writer-wins is the v1 behaviour (the final `rename()` wins)
 - No file locking is implemented in v1; this is an acceptable tradeoff for a local dev tool where concurrent invocations are rare

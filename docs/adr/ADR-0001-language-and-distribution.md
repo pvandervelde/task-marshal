@@ -49,12 +49,14 @@ task-marshal is implemented in **Rust**, compiled to a **single statically-linke
 ## Consequences
 
 **Positive:**
+
 - Single binary; no runtime installation beyond copying to PATH
 - Fast startup (<100ms expected for typical invocations)
 - Memory safety guarantees from the Rust type system
 - Compile-time verification of all error paths via `Result<T, E>`
 
 **Negative / Tradeoffs:**
+
 - Cannot link against `bd` or `gh` as libraries; all BEADS and GitHub integration must be via subprocess calls
 - Cross-compilation required for Windows/Linux/macOS release artifacts
 - Longer compile times compared to interpreted languages (acceptable for a CLI tool)

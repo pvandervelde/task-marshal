@@ -50,11 +50,13 @@ No `--config` flag or environment variable override is provided in v1.
 ## Consequences
 
 **Positive:**
+
 - Works from any project subdirectory — zero user friction
 - Consistent with developer expectations (git-style discovery)
 - Config is co-located with the project (`.llm/` directory), suitable for version control
 
 **Negative / Tradeoffs:**
+
 - A project nested inside another project with its own config may unexpectedly inherit the parent's config if the inner project has no config file. This is documented as expected behavior (the nearest ancestor wins).
 - No override mechanism in v1 — advanced use cases (monorepos, non-standard layouts) cannot override the discovery path without a code change
 

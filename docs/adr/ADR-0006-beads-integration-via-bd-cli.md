@@ -12,6 +12,7 @@ task-marshal needs to list eligible BEADS tasks and mark them complete. BEADS (`
 The user requirements (§6.2) reference "the BEADS local database" and "the BEADS API," and the original config example used `db_path = ".llm/beads.db"`. These descriptions are not accurate to how BEADS works.
 
 **Key facts about BEADS:**
+
 - `bd` is a CLI tool (Go binary), not a library
 - Data is stored in a Dolt database directory (`.beads/`), not a single `.db` file
 - `bd ready --json` returns tasks with no open blockers (dependency filtering handled natively)
@@ -28,6 +29,7 @@ BEADS operations are performed by spawning **`bd` CLI** as a subprocess using `s
 The `db_path` config key from the original requirements is replaced with an optional `beads_dir` key, which — if present — is passed as the `BEADS_DIR` environment variable to `bd` subprocess calls. If `beads_dir` is absent, `bd` uses its own discovery.
 
 Relevant commands:
+
 - `bd ready --json` — list tasks with no open blockers
 - `bd show <native_id> --json` — get full task details
 - `bd close <native_id>` — mark task done
@@ -60,12 +62,14 @@ If `bd` is not in PATH or the BEADS database cannot be opened, `BeadsSource` ret
 ## Consequences
 
 **Positive:**
+
 - Decoupled from BEADS internals; survives BEADS schema changes
 - Dependency filtering is free (delegated to `bd ready`)
 - `bd` manages all concurrency, locking, and Dolt semantics
 - Consistent with how the BEADS project itself recommends integration
 
 **Negative / Tradeoffs:**
+
 - Runtime dependency on `bd` binary in PATH; graceful degradation if absent
 - JSON parsing of `bd` output is required
 - If `bd` hangs, task-marshal hangs (v1 has no subprocess timeout)
@@ -76,12 +80,14 @@ If `bd` is not in PATH or the BEADS database cannot be opened, `BeadsSource` ret
 ## Config Schema Change
 
 Original (incorrect, from user-requirements.md §9):
+
 ```toml
 [sources.beads]
 db_path = ".llm/beads.db"
 ```
 
 Corrected:
+
 ```toml
 [sources.beads]
 # Optional: path to the .beads/ directory.
@@ -107,5 +113,5 @@ See [assumptions.md](../spec/assumptions.md) — CA-01, CA-02.
 - [responsibilities.md](../spec/responsibilities.md) — BeadsSource card
 - [assumptions.md](../spec/assumptions.md) — CA-01, CA-02, CA-05
 - [security.md](../spec/security.md) — T1, T2
-- BEADS README: https://github.com/gastownhall/beads
+- BEADS README: <https://github.com/gastownhall/beads>
 - User requirements §6.2, §8.2 (beads behaviour)

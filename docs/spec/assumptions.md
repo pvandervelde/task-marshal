@@ -15,6 +15,7 @@ BEADS (`bd`) is a CLI tool backed by a Dolt version-controlled SQL database stor
 The `beads` source adapter shells out to the `bd` CLI subprocess. The BEADS database location is managed by `bd` itself via its own git-root-based discovery or via the `BEADS_DIR` environment variable.
 
 The corrected config entry is:
+
 ```toml
 [sources.beads]
 # Optional: override BEADS_DIR for bd subprocess invocations.

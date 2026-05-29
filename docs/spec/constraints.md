@@ -23,6 +23,7 @@ Rules that must be enforced in all implementation code. These are non-negotiable
 - Unexpected errors (programming bugs) may use `unreachable!()` with a message explaining the invariant
 
 **Error type assignments:**
+
 | Error | Type |
 |---|---|
 | Config not found or invalid TOML | `ConfigError` |
@@ -94,6 +95,7 @@ Rules that must be enforced in all implementation code. These are non-negotiable
 ## Dependency Constraints
 
 Required crates:
+
 - `clap` (v4+) — CLI argument parsing
 - `toml` — TOML config parsing
 - `serde` + `serde_json` — JSON deserialization for `bd` and `gh` output
@@ -101,6 +103,7 @@ Required crates:
 - `tempfile` — safe temp file creation for atomic writes
 
 Discouraged (requires justification):
+
 - Any async runtime (tokio, async-std)
 - Any crate that vendors a full TLS or HTTP stack (use `gh`/`bd` CLI instead)
 - `anyhow` in library code (use typed errors; `anyhow` may be used only in `main()` as a last resort)

@@ -67,6 +67,7 @@ A `**Completion Note:**` line is inserted immediately after the updated `**State
 ```
 
 **Parser tolerance:**
+
 - Trailing whitespace on lines is ignored
 - Both `\r\n` and `\n` line endings are accepted
 - A malformed task block (missing required `### Description` or `### Acceptance Criteria`) is skipped with a stderr warning; other tasks are unaffected
@@ -99,11 +100,13 @@ A `**Completion Note:**` line is inserted immediately after the updated `**State
 ## Consequences
 
 **Positive:**
+
 - Human-readable and author-friendly — agents and developers can read and edit the file directly
 - Git-diffable — state changes show as minimal one-line diffs
 - No binary format — no special tools needed to inspect the task file
 
 **Negative / Tradeoffs:**
+
 - Requires a custom markdown parser (not a general markdown renderer — only task block structure is parsed)
 - In-place update is more complex than replacing the entire file (must preserve surrounding content exactly)
 - Malformed blocks are silently skipped (with warning) rather than causing a hard error — requires careful authoring

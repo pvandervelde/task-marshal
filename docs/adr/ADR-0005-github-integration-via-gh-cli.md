@@ -20,6 +20,7 @@ A decision is needed on how to call the GitHub API.
 GitHub operations are performed by spawning the **`gh` CLI** as a subprocess using `std::process::Command`. task-marshal does not call the GitHub REST or GraphQL API directly. Arguments are passed as separate process arguments; no shell interpolation is used.
 
 Relevant commands:
+
 - `gh issue list --repo <owner/repo> --label <label> --json number,title,body,labels,state`
 - `gh issue view <number> --json number,title,body,labels,state`
 - `gh issue close <number>`
@@ -52,11 +53,13 @@ If `gh` is not in PATH, not authenticated, or the network is unavailable, `Githu
 ## Consequences
 
 **Positive:**
+
 - Zero credential management in task-marshal
 - `gh` handles authentication flow, token refresh, and enterprise GitHub URLs
 - `gh` is already a standard part of developer and agent environments that use GitHub
 
 **Negative / Tradeoffs:**
+
 - Runtime dependency on `gh` binary in PATH; graceful degradation (skip source) if absent
 - Cannot distinguish "not authenticated" from "network unavailable" — both surface as `SourceUnavailable`
 - If `gh` hangs (e.g., DNS timeout with no connection refused), task-marshal also hangs (v1 does not implement subprocess timeouts)

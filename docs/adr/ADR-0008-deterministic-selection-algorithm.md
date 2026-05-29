@@ -12,6 +12,7 @@ The requirements (§8.1, §11) mandate that `task-marshal next` must be **determ
 Sources return tasks in varying and potentially non-deterministic orders (file ordering, database query result ordering, API pagination order). A total ordering must be imposed.
 
 Additionally, the selection must handle:
+
 - Multiple sources with a configured priority order
 - Tasks with explicit priority values (P0–P3+)
 - An optional role filter
@@ -37,6 +38,7 @@ The `TaskSelector` implements the following deterministic algorithm:
 5. **Select:** Return the first element of the sorted list, or `None` if the list is empty.
 
 **Key properties:**
+
 - No randomness at any step
 - All ordering criteria are deterministic given the same input
 - The stable sort on `NativeId` as tiebreaker ensures two tasks with identical Priority and source order are always resolved consistently
@@ -77,11 +79,13 @@ The `TaskSelector` implements the following deterministic algorithm:
 ## Consequences
 
 **Positive:**
+
 - Fully deterministic — the same source state always produces the same result
 - Auditable — the algorithm is simple enough to reason about manually
 - Cross-source priority: a P0 in any source beats a P1 in any source
 
 **Negative / Tradeoffs:**
+
 - All sources must be queried before any selection can be made (cannot short-circuit at first result)
 - NativeId lexicographic ordering means task naming conventions affect selection order at equal priority — users should be aware
 - GitHub dependency tracking is not supported in v1 (all GitHub issues are treated as unblocked regardless of labels or linked issues)

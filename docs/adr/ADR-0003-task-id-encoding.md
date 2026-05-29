@@ -25,6 +25,7 @@ Task IDs use the format **`<SourceKey>:<NativeId>`**, where:
 - The colon (`:`) is the delimiter
 
 Examples:
+
 - `local:TASK-042`
 - `beads:bd-a1b2`
 - `gh:187`
@@ -56,11 +57,13 @@ The `TaskIdParser` splits on the first colon only, allowing `NativeId` values th
 ## Consequences
 
 **Positive:**
+
 - Stateless routing — `done` and `show` work without any session state
 - Human-readable — developers can read and type task IDs
 - Consistent across all sources
 
 **Negative / Tradeoffs:**
+
 - `SourceKey` is part of the public-facing ID; renaming a source key (e.g., `gh` → `github`) would break all existing IDs
 - The format requires validation on input (`done <id>`) to reject malformed IDs
 

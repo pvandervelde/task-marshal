@@ -26,6 +26,7 @@ task-marshal locates its config file by walking up the directory tree:
 All relative paths specified in the config file (e.g., `sources.local.path`) are resolved relative to the **directory containing the config file**, not the CWD. This ensures consistent behaviour regardless of which subdirectory the user invokes task-marshal from.
 
 Example:
+
 ```
 /project/.llm/task-marshal.toml  → config file
 /project/.llm/tasks.md           → resolved from path = ".llm/tasks.md" relative to /project/
@@ -60,6 +61,7 @@ labels = ["agent-task"]
 ```
 
 Notes:
+
 - All `[sources.*]` sections are optional. Sources not present in config are not used.
 - Sources listed in `priority` but without a corresponding `[sources.*]` section are silently ignored.
 - **No credentials belong in this file.** GitHub auth is managed by `gh`; BEADS auth (if any) is managed by `bd`.
@@ -142,6 +144,7 @@ Full description of the work to be done.
 ```
 
 **Field rules:**
+
 - `## <NativeId>: <title>` — heading defines the task block boundary and ID
 - `**Priority:**` — `P0`, `P1`, `P2`, etc. (default `P2` if absent)
 - `**Role:**` — optional free-form string

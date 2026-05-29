@@ -15,6 +15,7 @@ task-marshal must handle a variety of failure modes across four layers:
 4. **Completion failures** — source update failed mid-write
 
 The requirements specify distinct behaviour for each:
+
 - Source unavailability → warning + skip (not exit 2)
 - No task found → exit 1 (not exit 2)
 - Operational errors → exit 2
@@ -43,6 +44,7 @@ All fallible operations return `Result<T, E>` with typed error enums derived usi
 The **CLI Dispatcher** is the sole component responsible for converting `Result` errors to exit codes and writing error messages to stderr.
 
 **Exit code mapping:**
+
 - `Ok(...)` → exit 0
 - `SelectionError::NoTaskFound` → exit 1
 - All other errors → exit 2
@@ -73,12 +75,14 @@ The **CLI Dispatcher** is the sole component responsible for converting `Result`
 ## Consequences
 
 **Positive:**
+
 - All error paths are explicit and compiler-checked
 - Skip logic for `SourceError::Unavailable` is clear and testable
 - Exit 1 vs exit 2 distinction enables programmatic use by agents
 - Error messages are consistently written to stderr by one place (CLI Dispatcher)
 
 **Negative / Tradeoffs:**
+
 - More boilerplate than `anyhow` (mitigated by `thiserror`)
 - Converting between error types across layer boundaries requires `From` implementations
 

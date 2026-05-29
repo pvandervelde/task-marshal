@@ -61,6 +61,7 @@ Start with [vocabulary.md](vocabulary.md) to understand domain concepts, then [a
 **Central abstraction:** The `TaskSource` trait. All business logic depends only on this trait, never on concrete implementations.
 
 **Types to define:**
+
 - Domain: `Task`, `TaskId`, `NativeId`, `SourceKey`, `TaskBlock`, `TaskSummary`, `TaskState`, `Priority`, `Role`, `Dependency`
 - Selection: `SelectionFilter`, `SortKey`
 - Config: `Config`, `SourcesConfig`, `LocalSourceConfig`, `BeadsSourceConfig`, `GithubSourceConfig`

@@ -52,6 +52,7 @@ graph LR
 ## Business Logic
 
 ### Task Selection
+
 - **Knows:** priority ordering, dependency-blocked filtering, role filtering, sort key construction
 - **Operations:** Given a merged list of `TaskSummary` from all sources and a `SelectionFilter`, returns the single best candidate or `None`
 - **Business rules:**
@@ -62,16 +63,19 @@ graph LR
   - Selection is deterministic: identical inputs always produce identical output
 
 ### Task ID Routing
+
 - **Knows:** `<SourceKey>:<NativeId>` format, the set of valid SourceKeys
 - **Operations:** Parse a `TaskId` string; encode a `(SourceKey, NativeId)` pair into a `TaskId` string
 - **Business rules:** Invalid format or unknown SourceKey → `InvalidTaskId` error
 
 ### Configuration Loading
+
 - **Knows:** Config file name, walk-up discovery algorithm, TOML schema
 - **Operations:** Discover the config file path; parse into `Config`
 - **Business rules:** No config file found → `ConfigError`; invalid TOML or schema violation → `ConfigError`
 
 ### Source Registry
+
 - **Knows:** Which source keys have concrete implementations; the ordered source list from config
 - **Operations:** Build ordered `Vec<Box<dyn TaskSource>>` from `Config`; look up a single source by `SourceKey`
 
@@ -84,6 +88,7 @@ graph LR
 The single abstraction that all source adapters implement. Business logic depends exclusively on this trait.
 
 **Operations:**
+
 - `list(filter: &SelectionFilter) -> Result<Vec<TaskSummary>, SourceError>`
   Returns all eligible (unblocked, matching filter) tasks from this source.
   Must not modify the source.
@@ -94,6 +99,7 @@ The single abstraction that all source adapters implement. Business logic depend
   Marks the task as done and propagates to the source. Atomic.
 
 **Error contract:**
+
 - `SourceError::Unavailable` — source is unreachable; caller should skip and warn
 - `SourceError::NotFound` — task with given native_id does not exist in this source
 - `SourceError::Io(...)` — underlying I/O failure
@@ -131,11 +137,13 @@ The single abstraction that all source adapters implement. Business logic depend
 The CLI layer is infrastructure, not business logic.
 
 ### Command Dispatcher
+
 - Parses arguments using `clap`
 - Orchestrates the sequence: load config → build sources → invoke business logic → format output
 - Maps error types to exit codes
 
 ### OutputFormatter
+
 - Renders `Task` → `TaskBlock` plain-text string
 - Renders `Vec<TaskSummary>` → table string
 - No logic — pure rendering
@@ -152,6 +160,7 @@ The CLI layer is infrastructure, not business logic.
 | CLI Layer | Business Logic, Abstractions, domain types, Infrastructure (to construct concrete types) |
 
 **Forbidden:**
+
 - Business logic importing any infrastructure type directly
 - Infrastructure types depending on each other
 - `TaskSelector` calling any source directly (must receive pre-fetched summaries)
@@ -161,7 +170,9 @@ The CLI layer is infrastructure, not business logic.
 ## Cross-Cutting Concerns
 
 ### Error Handling
+
 All fallible operations return `Result<T, E>`. Error types are distinct per layer:
+
 - `ConfigError` — config loading failures
 - `SourceError` — source adapter failures (per-operation)
 - `SelectionError` — selection logic failures (currently only `NoTaskFound`)
@@ -171,10 +182,12 @@ All fallible operations return `Result<T, E>`. Error types are distinct per laye
 See [constraints.md](constraints.md) for implementation rules.
 
 ### Output Channels
+
 - **stdout:** Task content only (`TaskBlock`, `TaskSummary` table, completion confirmation)
 - **stderr:** Warnings (skipped unavailable sources), errors, diagnostic messages
 
 ### Subprocess Safety
+
 All external commands (`bd`, `gh`) are invoked with arguments passed as separate process arguments, never via shell interpolation. This prevents command injection.
 
 See [security.md](security.md).

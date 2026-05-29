@@ -95,11 +95,13 @@ Using a property-based testing crate (e.g., `proptest`):
 ## Test Infrastructure
 
 ### Mock Subprocess Runner
+
 An abstraction over `std::process::Command` execution, injected into `BeadsSource` and `GithubSource` during tests. In production, calls the real binary; in tests, returns a configured `(stdout, stderr, exit_code)` triple.
 
 This requires the subprocess execution to be abstract enough for injection. The interface designer should define a `CommandRunner` trait (or similar) that `BeadsSource` and `GithubSource` depend on.
 
 ### Test Fixture Task File
+
 A `tasks.md` file in `tests/fixtures/` with a representative set of tasks: unstarted, in_progress, blocked, done, various priorities, various roles, with and without dependencies.
 
 ---
