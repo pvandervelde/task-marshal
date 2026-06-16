@@ -1,0 +1,21 @@
+[package]
+name = "task-marshal"
+version = "0.1.0"
+edition = "2021"
+description = "A CLI broker that provides a single, stable interface for retrieving and completing tasks"
+license = "MIT"
+
+[[bin]]
+name = "task-marshal"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+toml = { version = "0.8", features = ["parse"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tempfile = "3"
+
+[dev-dependencies]
+proptest = "1"
