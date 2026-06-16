@@ -11,7 +11,7 @@ use crate::identity::SourceKey;
 /// Complete parsed configuration for task-marshal.
 ///
 /// See docs/spec/interfaces/config.md
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Config {
     /// Configuration for all task sources.
     pub sources: SourcesConfig,
@@ -26,7 +26,7 @@ pub struct Config {
 /// Configuration for all task sources.
 ///
 /// See docs/spec/interfaces/config.md
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourcesConfig {
     /// Ordered list of source keys; determines priority during task selection.
     /// Duplicates are silently deduplicated (first occurrence kept).
@@ -48,7 +48,7 @@ pub struct SourcesConfig {
 /// Configuration for the local markdown task file source.
 ///
 /// See docs/spec/interfaces/config.md
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LocalSourceConfig {
     /// Absolute path to the local task markdown file.
     /// Resolved from the raw config value relative to the config file's directory.
@@ -61,7 +61,7 @@ pub struct LocalSourceConfig {
 /// Configuration for the BEADS CLI source.
 ///
 /// See docs/spec/interfaces/config.md
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BeadsSourceConfig {
     /// Optional path to the BEADS database directory.
     /// If set, passed as `BEADS_DIR` env var to `bd` subprocess.
@@ -74,7 +74,7 @@ pub struct BeadsSourceConfig {
 /// Configuration for the GitHub Issues CLI source.
 ///
 /// See docs/spec/interfaces/config.md
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GithubSourceConfig {
     /// GitHub repository in `owner/repo` format. Required.
     pub repo: String,

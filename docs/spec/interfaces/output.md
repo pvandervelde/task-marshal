@@ -147,6 +147,7 @@ pub enum CompletionError {
 | `SourceError::NotFound` | `CompletionError::TaskNotFound` |
 | `SourceError::Io` | `CompletionError::Io` |
 | `SourceError::Parse` | `CompletionError::Io` (unexpected parse failure) |
+| `SourceError::PartialCompletion` | `CompletionError::PartialCompletion` |
 
 **Exit code:** 2 for all variants.
 

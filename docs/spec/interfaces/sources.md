@@ -104,6 +104,12 @@ pub enum SourceError {
     /// The source's output could not be parsed into domain types.
     #[error("parse error: {message}")]
     Parse { message: String },
+
+    /// A multi-step operation partially succeeded: the primary action (e.g. close) completed
+    /// but a secondary action (e.g. post a comment) failed.
+    /// The task IS marked done; only the annotation is missing.
+    #[error("partial completion: {message}")]
+    PartialCompletion { message: String },
 }
 ```
 
@@ -198,6 +204,30 @@ pub trait SubprocessRunner {
 ```
 
 **Object safety:** `SubprocessRunner` is object-safe. Use as `Box<dyn SubprocessRunner>`.
+
+---
+
+## `RealSubprocessRunner`
+
+Production implementation of `SubprocessRunner` using `std::process::Command`.
+
+**File:** `src/sources/mod.rs`
+
+```rust
+pub struct RealSubprocessRunner;
+
+impl SubprocessRunner for RealSubprocessRunner {
+    fn run(
+        &self,
+        program: &str,
+        args: &[&str],
+        env_vars: &[(String, String)],
+    ) -> Result<SubprocessOutput, SourceError>;
+}
+```
+
+All arguments are passed as separate process arguments. No shell interpolation.
+Pass `Box::new(RealSubprocessRunner)` to `BeadsSource::new` and `GithubSource::new` in `main.rs`.
 
 ---
 
@@ -372,7 +402,7 @@ gh issue comment <native_id> --repo <repo> --body "<comment_text>"
 ```
 
 Both commands are executed in sequence. If `close` succeeds but `comment` fails, return
-`SourceError::Io` with a message noting the partial state.
+`SourceError::PartialCompletion` with a message noting the partial state.
 
 **v1 constraint:** GitHub issues have no dependency tracking. All issues returned by `list`
 are treated as `TaskState::Unstarted` (or `InProgress` if the GitHub issue is assigned).
@@ -382,6 +412,7 @@ are treated as `TaskState::Unstarted` (or `InProgress` if the GitHub issue is as
 - Subprocess ENOENT → `SourceError::Unavailable`
 - Non-zero exit from `list` or `get` (e.g., auth failure) → `SourceError::Unavailable`
 - Non-zero exit from `complete` → `SourceError::Io`
+- `close` success + `comment` failure → `SourceError::PartialCompletion`
 - JSON parse failure → `SourceError::Parse`
 
 ---
@@ -408,7 +439,7 @@ are treated as `TaskState::Unstarted` (or `InProgress` if the GitHub issue is as
 | `title` | `Task.title` | |
 | `body` | `Task.description` | Full issue body |
 | `state` | `TaskState` | `"OPEN"` → `Unstarted`; `"CLOSED"` → `Done` |
-| labels | `Role` | If a label matches a role convention, extracted as role; otherwise none |
+| `labels` | `Role` | **v1: no role mapping.** GitHub labels are not mapped to roles; `role` is always `None` for GitHub tasks in v1. |
 
 ---
 

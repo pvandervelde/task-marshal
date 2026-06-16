@@ -1,6 +1,8 @@
 // task-marshal library root
 // See docs/spec/interfaces/shared-types.md for type documentation.
 
+use std::hash::{Hash, Hasher};
+
 pub mod config;
 pub mod identity;
 pub mod output;
@@ -58,6 +60,13 @@ impl PartialEq for Role {
 }
 
 impl Eq for Role {}
+
+// Hash must match the case-insensitive PartialEq: normalise to lowercase before hashing.
+impl Hash for Role {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.to_ascii_lowercase().hash(state);
+    }
+}
 
 // ── Dependency ────────────────────────────────────────────────────────────────
 

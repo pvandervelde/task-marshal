@@ -19,7 +19,8 @@ use crate::{Task, TaskSummary};
 ///                            gh issue comment <native_id> --repo <repo> --body <text>
 ///
 /// v1 constraint: GitHub issues have no dependency tracking.
-/// All issues returned by list are treated as TaskState::Unstarted.
+/// All issues returned by list are treated as TaskState::Unstarted,
+/// or TaskState::InProgress if the GitHub issue is assigned.
 ///
 /// See docs/spec/interfaces/sources.md
 pub struct GithubSource {

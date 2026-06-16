@@ -5,10 +5,6 @@ use thiserror::Error;
 
 use crate::{Priority, Role, SourceKey, TaskSummary};
 
-// Re-export Priority here since it logically belongs with selection concerns,
-// but is used widely enough to live in lib.rs directly.
-// (Priority is defined in lib.rs; this module imports it via crate::.)
-
 // ── SelectionFilter ───────────────────────────────────────────────────────────
 
 /// The combined set of criteria applied when selecting or listing tasks.

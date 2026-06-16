@@ -73,10 +73,11 @@ impl OutputFormatter {
 /// All variants map to exit code 2.
 ///
 /// Mapping from SourceError:
-///   SourceError::Unavailable → CompletionError::SourceUnavailable
-///   SourceError::NotFound    → CompletionError::TaskNotFound
-///   SourceError::Io          → CompletionError::Io
-///   SourceError::Parse       → CompletionError::Io
+///   SourceError::Unavailable        → CompletionError::SourceUnavailable
+///   SourceError::NotFound           → CompletionError::TaskNotFound
+///   SourceError::Io                 → CompletionError::Io
+///   SourceError::Parse              → CompletionError::Io
+///   SourceError::PartialCompletion  → CompletionError::PartialCompletion
 ///
 /// See docs/spec/interfaces/output.md
 #[derive(Debug, Error)]

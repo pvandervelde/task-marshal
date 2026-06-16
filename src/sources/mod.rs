@@ -35,6 +35,12 @@ pub enum SourceError {
     /// The source's output could not be parsed into domain types.
     #[error("parse error: {message}")]
     Parse { message: String },
+
+    /// A multi-step operation partially succeeded: the primary action (e.g. close/mark-done)
+    /// completed but the secondary action (e.g. post a comment) failed.
+    /// The task IS marked done; only the annotation is missing.
+    #[error("partial completion: {message}")]
+    PartialCompletion { message: String },
 }
 
 // ── TaskSource ────────────────────────────────────────────────────────────────
@@ -136,6 +142,26 @@ pub trait SubprocessRunner {
         args: &[&str],
         env_vars: &[(String, String)],
     ) -> Result<SubprocessOutput, SourceError>;
+}
+
+// ── RealSubprocessRunner ──────────────────────────────────────────────────────
+
+/// Production implementation of `SubprocessRunner` using `std::process::Command`.
+///
+/// Passes all arguments as separate process arguments; no shell interpolation.
+///
+/// See docs/spec/interfaces/sources.md
+pub struct RealSubprocessRunner;
+
+impl SubprocessRunner for RealSubprocessRunner {
+    fn run(
+        &self,
+        program: &str,
+        args: &[&str],
+        env_vars: &[(String, String)],
+    ) -> Result<SubprocessOutput, SourceError> {
+        unimplemented!("See docs/spec/interfaces/sources.md")
+    }
 }
 
 // ── SourceRegistry ────────────────────────────────────────────────────────────

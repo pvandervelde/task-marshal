@@ -165,6 +165,15 @@ The CLI layer is infrastructure, not business logic.
 - Infrastructure types depending on each other
 - `TaskSelector` calling any source directly (must receive pre-fetched summaries)
 
+**Intentional exception — `ConfigError` in infrastructure:**
+
+`LocalFileSource::new()` and `SourceRegistry::from_config()` return `ConfigError` (a
+business-logic type) rather than a separate infrastructure error. This is a deliberate
+pragmatic tradeoff: path-validation failures during source construction are logically
+configuration errors, and introducing a separate `InfrastructureSetupError` type would add
+indirection with no benefit at v1 scope. If infrastructure grows significantly, extracting a
+shared `ValidationError` type is the recommended refactoring path.
+
 ---
 
 ## Cross-Cutting Concerns

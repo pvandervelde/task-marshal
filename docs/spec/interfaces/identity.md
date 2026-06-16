@@ -48,7 +48,13 @@ impl SourceKey {
     pub fn as_str(&self) -> &'static str;
 
     /// Parses a string into a SourceKey. Returns None for unknown keys.
-    pub fn from_str(s: &str) -> Option<Self>;
+    pub fn from_key_str(s: &str) -> Option<Self>;
+}
+
+impl std::str::FromStr for SourceKey {
+    type Err = ();
+    // Returns Ok(variant) for known keys, Err(()) for unknown.
+    // Enables `"local".parse::<SourceKey>()` syntax.
 }
 ```
 
@@ -83,6 +89,13 @@ direct lexicographic comparison. The displayed NativeId is always the original v
 
 ```rust
 impl NativeId {
+    /// Creates a new validated `NativeId`.
+    ///
+    /// # Errors
+    /// * `NativeIdError::Empty` — `s` is empty
+    /// * `NativeIdError::ContainsColon` — `s` contains a colon
+    pub fn new(s: String) -> Result<Self, NativeIdError>;
+
     /// Returns the sort key string for this NativeId.
     ///
     /// Numeric NativeIds are zero-padded to 9 digits:
@@ -98,7 +111,26 @@ impl NativeId {
 
 ---
 
-### `TaskId`
+## `NativeIdError`
+
+Error returned when a `NativeId` cannot be constructed.
+
+```rust
+#[derive(Debug, thiserror::Error)]
+pub enum NativeIdError {
+    /// The provided string is empty.
+    #[error("NativeId must not be empty")]
+    Empty,
+
+    /// The provided string contains a colon, which is the `TaskId` delimiter.
+    #[error("NativeId '{0}' must not contain a colon (':')")]
+    ContainsColon(String),
+}
+```
+
+---
+
+## `TaskId`
 
 The globally unique, source-encoded identifier for a task.
 
@@ -124,7 +156,7 @@ impl TaskId {
 
 **Display:** Outputs `<source_key>:<native_id>` format.
 
-**Derives:** `Debug`, `Clone`, `PartialEq`, `Eq`
+**Derives:** `Debug`, `Clone`, `PartialEq`, `Eq`, `Hash`
 
 ---
 

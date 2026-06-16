@@ -2,6 +2,7 @@
 // See docs/spec/interfaces/identity.md for full contract documentation.
 
 use std::fmt;
+use std::str::FromStr;
 use thiserror::Error;
 
 // ── SourceKey ─────────────────────────────────────────────────────────────────
@@ -32,13 +33,25 @@ impl SourceKey {
     }
 
     /// Parses a string into a `SourceKey`. Returns `None` for unknown keys.
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn from_key_str(s: &str) -> Option<Self> {
         match s {
             "local" => Some(SourceKey::Local),
             "beads" => Some(SourceKey::Beads),
             "gh" => Some(SourceKey::Github),
             _ => None,
         }
+    }
+}
+
+impl FromStr for SourceKey {
+    type Err = ();
+
+    /// Parses a string into a `SourceKey`.
+    ///
+    /// Enables `"local".parse::<SourceKey>()` syntax.
+    /// Returns `Err(())` for unknown keys.
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_key_str(s).ok_or(())
     }
 }
 
@@ -52,13 +65,23 @@ impl fmt::Display for SourceKey {
 
 /// The identifier used by the source system for a task.
 ///
-/// Must be non-empty and must not contain a colon (`:`).
+/// Must be non-empty and must not contain a colon (`:`), which is the `TaskId` delimiter.
 ///
 /// See docs/spec/interfaces/identity.md
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct NativeId(pub String);
 
 impl NativeId {
+    /// Creates a new validated `NativeId`.
+    ///
+    /// # Errors
+    /// * `NativeIdError::Empty` — `s` is empty
+    /// * `NativeIdError::ContainsColon` — `s` contains a colon
+    ///
+    /// See docs/spec/interfaces/identity.md
+    pub fn new(s: String) -> Result<Self, NativeIdError> {
+        unimplemented!("See docs/spec/interfaces/identity.md")
+    }
     /// Returns the sort key string for tiebreaker ordering in TaskSelector.
     ///
     /// Numeric NativeIds (all digits) are zero-padded to 9 digits:
@@ -88,7 +111,7 @@ impl fmt::Display for NativeId {
 /// Self-routing: the `source_key` field tells task-marshal which adapter to use.
 ///
 /// See docs/spec/interfaces/identity.md
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TaskId {
     pub source_key: SourceKey,
     pub native_id: NativeId,
@@ -110,8 +133,8 @@ pub struct TaskIdParser;
 impl TaskIdParser {
     /// Parses a task ID string in `<source>:<native_id>` format.
     ///
-    /// Splits on the **first** colon only — NativeId values may contain colons
-    /// (e.g. BEADS hierarchical IDs like `"bd-a1b2.3"`).
+    /// Splits on the **first** colon only. BEADS hierarchical IDs use dots
+    /// (e.g. `"bd-a1b2.3"`), not colons, so the first-colon split is safe.
     ///
     /// # Errors
     /// * `ParseError::InvalidTaskId` — no colon present, or source/native parts are empty
@@ -119,6 +142,22 @@ impl TaskIdParser {
     pub fn parse(input: &str) -> Result<TaskId, ParseError> {
         unimplemented!("See docs/spec/interfaces/identity.md")
     }
+}
+
+// ── NativeIdError ─────────────────────────────────────────────────────────────
+
+/// Error returned when a `NativeId` cannot be constructed.
+///
+/// See docs/spec/interfaces/identity.md
+#[derive(Debug, Error)]
+pub enum NativeIdError {
+    /// The provided string is empty.
+    #[error("NativeId must not be empty")]
+    Empty,
+
+    /// The provided string contains a colon, which is the `TaskId` delimiter.
+    #[error("NativeId '{0}' must not contain a colon (':')")]
+    ContainsColon(String),
 }
 
 // ── ParseError ────────────────────────────────────────────────────────────────
