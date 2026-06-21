@@ -1,0 +1,84 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    ":dependencyDashboard",
+    "security:openssf-scorecard"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": [
+      "security"
+    ],
+    "minimumReleaseAge": null,
+    "automerge": false
+  },
+  "osvVulnerabilityAlerts": true,
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "packageRules": [
+    {
+      "description": "Batch noisy minor/patch updates into one weekly PR instead of daily ratcheting",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "schedule": [
+        "before 4am on Monday"
+      ],
+      "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "Major version bumps need manual review and an extended stabilisation window",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "minimumReleaseAge": "7 days",
+      "automerge": false,
+      "labels": [
+        "breaking-change",
+        "dependencies"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "taiki-e/install-action"
+      ],
+      "groupName": "install-action",
+      "schedule": [
+        "on the first day of the month"
+      ]
+    },
+    {
+      "description": "Security patches bypass the 48h delay — merge fast but still require review",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchCategories": [
+        "security"
+      ],
+      "minimumReleaseAge": "0 hours",
+      "schedule": [
+        "at any time"
+      ],
+      "automerge": false,
+      "labels": [
+        "security",
+        "dependencies"
+      ]
+    }
+  ],
+  "pinDigests": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 4am on Monday"
+    ]
+  },
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 2,
+  "prCreation": "not-pending",
+  "postUpdateOptions": [],
+  "ignoreScripts": true
+}
